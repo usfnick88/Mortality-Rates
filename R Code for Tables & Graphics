@@ -1,0 +1,143 @@
+# Nicholas Marciano - Term Project #
+# Categorical Data Analysis #
+# STA 4504 #
+# Tables & Graphics #
+
+-------------------------------------------------------------
+
+library(NSM3)
+library(epicalc)
+library(MASS)
+library(xlsx)
+library(graphics)
+library(BSDA)
+library(reshape2)
+library(car)
+
+getwd()
+setwd("/Users/usfnck88/R Import Data/Categorical Data")
+list.files()
+
+-------------------------------------------------------------
+
+## Global Data Frame ##
+
+sad.table <- read.xlsx("sad.data.xlsx",sheetName="Sheet5");sad.table
+rDR <- round(sad.table$Death.Rate,3);rDR
+sad.table[,6] <- rDR;sad.table
+
+## 3 - way Contingency Table ##
+
+sad.table.3a <- sad.table[,c(1,2,3,4)];sad.table.3a
+colnames(sad.table.3a) <- c("Age.","Smoking.Type","Population","Death")
+attach(sad.table.3a)
+sad.table.3a <- melt(sad.table.3a,measure.vars=c("Death","Population"))
+sad.table.3a <- dcast(sad.table.3a,...~Smoking.Type)
+colnames(sad.table.3a) <- c("Age.","MV","CON","COT","CP","NS")
+sad.table.3a <- sad.table.3a[,c("Age.","MV","NS","CP","COT","CON")];sad.table.3a
+
+## Two 3-way tables of Death Rates ##
+
+sad.table.3b <- sad.table[,c(1,2,6)];sad.table.3b #removal of cols 3 and 4#
+sad.table.3b <- dcast(sad.table.3b,...~Smoking.Type);sad.table.3b #rate of death for each ST by age group#
+sad.table.3b <- sad.table.3b[,c("Age.","NS","CP","COT","CON")];sad.table.3b #rearrange columns#
+sad.table.3b
+
+## Consolidated Global Data Frame ##
+
+sad.table.3e <- read.xlsx("sad.data.xlsx",sheetName="Sheet7");sad.table.3d
+sad.table.3e <- sad.table.3d
+sad.table.3e[,5] <- round((sad.table.3e$Deaths/sad.table.3e$Population),3);sad.table.3e
+colnames(sad.table.3e) <- c("Age","Smoking.Type","Population","Deaths","Death.Rate");sad.table.3e
+
+## Consolidated 3 - way Continegency Table ##
+
+sad.table.3d <- read.xlsx("sad.data.xlsx",sheetName="Sheet7");sad.table.3d
+sad.table.3d <- melt(sad.table.3d,measure.vars=c("Deaths","Population"))
+sad.table.3d <- dcast(sad.table.3d,...~Smoking.Type);sad.table.3d
+colnames(sad.table.3d) <- c("Age.","MV","Non.Smoker","Smoker");sad.table.3d
+
+## Two Consolidated 3-way tables of Death Rates ##
+
+sad.table.3f <- sad.table.3e[,c(1,2,5)];sad.table.3f
+sad.table.3f <- dcast(sad.table.3f,...~Smoking.Type);sad.table.3f 
+
+## Table of 5 number summaries ##
+
+a <- fivenum(sad.table.3b$NS)
+b <- fivenum(sad.table.3b$CP)
+c <- fivenum(sad.table.3b$COT)
+d <- fivenum(sad.table.3b$CON)
+
+fns <- data.frame(cbind(a,b,c,d),row.names=c("1","2","3","4","5"))
+
+colnames(fns) <- c("NS","CP","COT","CON");fns
+
+-------------------------------------------------------------
+
+
+## Plot of Mortality Rates against Smoking Type (across Age) ##
+
+plot(sad.table$Smoking.Type,sad.table$Death.Rate,xlab="Smoking Type",ylab="Death Rate",main="Death Rate vs. Smoking Type\n(Across All Levels of Age)",col=c("light blue","light green")) #plot of death rate by smoking type#
+
+## Plot of Mortality Rates against Age (across each Smoking Type) ##
+
+par(mfrow=c(2,2))
+plot(sad.table.3b$Age.,sad.table.3b$NS,xlab="Age",ylab="Death",main="Death Rate of\nNS-type Smokers by Age Group",cex.main=0.8,cex.lab=0.8,cex.axis=0.8,ylim=c(0.0,0.6))
+plot(sad.table.3b$Age.,sad.table.3b$CP,xlab="Age",ylab="Death Rate",main="Death Rate of\nCP-type Smokers by Age Group",cex.main=0.8,cex.lab=0.8,cex.axis=0.8,ylim=c(0.0,0.6))
+plot(sad.table.3b$Age.,sad.table.3b$COT,xlab="Age",ylab="Death Rate",main="Death Rate of\nCOT-type Smokers by Age Group",cex.main=0.8,cex.lab=0.8,cex.axis=0.8,ylim=c(0.0,0.6))
+plot(sad.table.3b$Age.,sad.table.3b$CON,xlab="Age",ylab="Death Rate",main="Death Rate of\nCON-type Smokers by Age Group",cex.main=0.8,cex.lab=0.8,cex.axis=0.8,ylim=c(0.0,0.6))
+
+## Plot of Mortality Rate Comparisons ##
+
+par(mfrow=c(3,2))
+plot(sad.table.3b$NS,sad.table.3b$COT,xlab="NS-type Smokers\n(Death Rate)",ylab="COT-type Smokers (Death Rate)",main="Death Rate Comparison of\nCOT-type Smokers vs. NS-type Smokers\n(Across All Levels of Age)",cex.main=0.8,cex.lab=0.8,cex.axis=0.8,col="Red",ylim=c(0.0,0.6),xlim=c(0.0,0.6))
+abline(a=0,b=1,col="Blue",lty=2)
+plot(sad.table.3b$NS,sad.table.3b$CON,xlab="NS-type Smokers\n(Death Rate)",ylab="CON-type Smokers (Death Rate)",main="Death Rate Comparison of\nNS-type Smokers vs. CON-type Smokers\n(Across All Levels of Age)" ,cex.main=0.8,cex.lab=0.8,cex.axis=0.8,col="Red",ylim=c(0.0,0.6),xlim=c(0.0,0.6))
+abline(a=0,b=1,col="Blue",lty=2)
+plot(sad.table.3b$NS,sad.table.3b$COT,xlab="NS-type Smokers\n(Death Rate)",ylab="COT-type Smokers (Death Rate)",main="Death Rate Comparison of\nCOT-type Smokers vs. NS-type Smokers\n(Across All Levels of Age)",cex.main=0.8,cex.lab=0.8,cex.axis=0.8,col="Red",ylim=c(0.0,0.6),xlim=c(0.0,0.6))
+abline(a=0,b=1,col="Blue",lty=2)
+plot(sad.table.3b$COT,sad.table.3b$CON,xlab="COT-type Smokers\n(Death Rate)",ylab="CON-type Smokers (Death Rate)",main="Death Rate Comparison of\nCOT-type Smokers vs. CON-type Smokers\n(Across All Levels of Age)" ,cex.main=0.8,cex.lab=0.8,cex.axis=0.8,col="Red",ylim=c(0.0,0.6),xlim=c(0.0,0.6))
+abline(a=0,b=1,col="Blue",lty=2)
+
+## Plot of Consolidated Mortality Rates against Smoking Type (across Age) ##
+
+plot(sad.table.3e$Smoking.Type,sad.table.3e$Death.Rate,xlab="Smoking Type",ylab="Death Rate",main="Death Rate vs. Smoking Type\n(Across All Levels of Age)",col=c("light blue","light green"))
+
+---------------------------------------------------------------------
+
+# Assign Ranks to Blocks #
+
+sad.table.3b
+
+R <- matrix(data=NA,nrow=9,ncol=4);R
+R[,1] <- c(2,3,2,1,1,2,2,1,1)
+R[,2] <- c(1,1,1,2,2,1,1,2,2)
+R[,3] <- c(3,2,3,3,3,3,3,3,3)
+R[,4] <- c(4,4,4,4,4,4,4,4,4)
+R
+
+R <- as.data.frame(R)
+colnames(R) <- c("NS","CP","COT","CON");R
+
+R.1 <- sum(R$NS)
+R.2 <- sum(R$CP)
+R.3 <- sum(R$COT)
+R.4 <- sum(R$CON)
+
+L <- R.1+(2*R.2)+(3*R.3)+(4*R.4);L
+
+# Critical Value #
+
+p <- cPage(0.001,4,9);p
+l <- p$cutoff.U
+
+# A Distribution Test for Ordered Alternatives in a Randomized Complete Block Design #
+
+L>l 
+
+p.test <- matrix(NA,1,4)
+p.test[1,] <- c(263,251,0.001,"0.001<")
+p.test <- as.data.frame(p.test)
+colnames(p.test) <- c("TS","CS","alpha","p-value")
+p.test
