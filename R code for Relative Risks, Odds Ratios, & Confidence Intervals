@@ -1,0 +1,909 @@
+# Nicholas Marciano - Term Project #
+# Categorical Data Analysis #
+# STA 4504 #
+# Relative Risk, Odds Ratios & Confidence Intervals #
+
+---------------------------------------------------------
+
+# Working Diectory & File List #
+
+library(xlsx)
+library(reshape2)
+
+getwd()
+setwd("/Users/usfnck88/R Import Data/Categorical Data")
+list.files()
+
+---------------------------------------------------------
+
+# 3-way Contingency Table #
+
+sad.table <- read.xlsx("sad.data.xlsx",sheetName="Sheet5");sad.table
+O <- sad.table[,c(1,2,4,5)];O 
+O <- melt(O,measure.vars=c("Yes","No"))
+O.t <- dcast(O,...~Smoking.Type);O.t
+O.t <- O.t[,c("Age.","variable","NS","CP","COT","CON")];O.t
+
+----------------------------------------
+
+# Odds for NS (with CP)#
+
+O.t
+
+sp.NS1 <- O.t[1,3]/801
+fp.NS1 <- O.t[2,3]/801
+O.NS1 <- sp.NS1/fp.NS1;O.NS1
+
+sp.NS2 <- O.t[3,3]/463
+fp.NS2 <- O.t[4,3]/463
+O.NS2 <- sp.NS2/fp.NS2;O.NS2
+
+sp.NS3 <- O.t[5,3]/347
+fp.NS3 <- O.t[6,3]/347
+O.NS3 <- sp.NS3/fp.NS3;O.NS3
+
+sp.NS4 <- O.t[7,3]/1004
+fp.NS4 <- O.t[8,3]/1004
+O.NS4 <- sp.NS4/fp.NS4;O.NS4
+
+sp.NS5 <- O.t[9,3]/1913
+fp.NS5 <- O.t[10,3]/1913
+O.NS5 <- sp.NS5/fp.NS5;O.NS5
+
+sp.NS6 <- O.t[11,3]/1846
+fp.NS6 <- O.t[12,3]/1846
+O.NS6 <- sp.NS6/fp.NS6;O.NS6
+
+sp.NS7 <- O.t[13,3]/1492
+fp.NS7 <- O.t[14,3]/1492
+O.NS7 <- sp.NS7/fp.NS7;O.NS7
+
+sp.NS8 <- O.t[15,3]/1028
+fp.NS8 <- O.t[16,3]/1028
+O.NS8 <- sp.NS8/fp.NS8;O.NS8
+
+sp.NS9 <- O.t[17,3]/811
+fp.NS9 <- O.t[18,3]/811
+O.NS9 <- sp.NS9/fp.NS9;O.NS9
+
+NS <- rbind(O.NS1,O.NS2,O.NS3,O.NS4,O.NS5,O.NS6,O.NS7,O.NS8,O.NS9);NS
+
+------------------------------------------
+
+# Odds for CP (with NS)#
+
+O.t
+
+sp.CP1 <- O.t[1,4]/801
+fp.CP1 <- O.t[2,4]/801
+O.CP1 <- sp.CP1/fp.CP1;O.CP1
+
+sp.CP2 <- O.t[3,4]/463
+fp.CP2 <- O.t[4,4]/463
+O.CP2 <- sp.CP2/fp.CP2;O.CP2
+
+sp.CP3 <- O.t[5,4]/347
+fp.CP3 <- O.t[6,4]/347
+O.CP3 <- sp.CP3/fp.CP3;O.CP3
+
+sp.CP4 <- O.t[7,4]/1004
+fp.CP4 <- O.t[8,4]/1004
+O.CP4 <- sp.CP4/fp.CP4;O.CP4
+
+sp.CP5 <- O.t[9,4]/1913
+fp.CP5 <- O.t[10,4]/1913
+O.CP5 <- sp.CP5/fp.CP5;O.CP5
+
+sp.CP6 <- O.t[11,4]/1846
+fp.CP6 <- O.t[12,4]/1846
+O.CP6 <- sp.CP6/fp.CP6;O.CP6
+
+sp.CP7 <- O.t[13,4]/1492
+fp.CP7 <- O.t[14,4]/1492
+O.CP7 <- sp.CP7/fp.CP7;O.CP7
+
+sp.CP8 <- O.t[15,4]/1028
+fp.CP8 <- O.t[16,4]/1028
+O.CP8 <- sp.CP8/fp.CP8;O.CP8
+
+sp.CP9 <- O.t[17,4]/811
+fp.CP9 <- O.t[18,4]/811
+O.CP9 <- sp.CP9/fp.CP9;O.CP9
+
+CP <- rbind(O.CP1,O.CP2,O.CP3,O.CP4,O.CP5,O.CP6,O.CP7,O.CP8,O.CP9);CP
+
+------------------------------------------
+
+# Odds for COT (with NS) #
+
+
+sp.COT1 <- O.t[1,5]/5185
+fp.COT1 <- O.t[2,5]/5185
+O.COT1 <- sp.COT1/fp.COT1;O.COT1
+
+sp.COT2 <- O.t[3,5]/3389
+fp.COT2 <- O.t[4,5]/3389
+O.COT2 <- sp.COT2/fp.COT2;O.COT2
+
+sp.COT3 <- O.t[5,5]/2516
+fp.COT3 <- O.t[6,5]/2516
+O.COT3 <- sp.COT3/fp.COT3;O.COT3
+
+sp.COT4 <- O.t[7,5]/5314
+fp.COT4 <- O.t[8,5]/5314
+O.COT4 <- sp.COT4/fp.COT4;O.COT4
+
+sp.COT5 <- O.t[9,5]/7119
+fp.COT5 <- O.t[10,5]/7119
+O.COT5 <- sp.COT5/fp.COT5;O.COT5
+
+sp.COT6 <- O.t[11,5]/4777
+fp.COT6 <- O.t[12,5]/4777
+O.COT6 <- sp.COT6/fp.COT6;O.COT6
+
+sp.COT7 <- O.t[13,5]/2701
+fp.COT7 <- O.t[14,5]/2701
+O.COT7 <- sp.COT7/fp.COT7;O.COT7
+
+sp.COT8 <- O.t[15,5]/1232
+fp.COT8 <- O.t[16,5]/1232
+O.COT8 <- sp.COT8/fp.COT8;O.COT8
+
+sp.COT9 <- O.t[17,5]/619
+fp.COT9 <- O.t[18,5]/619
+O.COT9 <- sp.COT9/fp.COT9;O.COT9
+
+COT <- rbind(O.COT1,O.COT2,O.COT3,O.COT4,O.COT5,O.COT6,O.COT7,O.COT8,O.COT9);COT
+
+------------------------------------------
+
+# Odds for CON #
+
+O.t
+
+sp.CON1 <- O.t[1,6]/4066
+fp.CON1 <- O.t[2,6]/4066
+O.CON1 <- sp.CON1/fp.CON1;O.CON1
+
+sp.CON2 <- O.t[3,6]/2598
+fp.CON2 <- O.t[4,6]/2598
+O.CON2 <- sp.CON2/fp.CON2;O.CON2
+
+sp.CON3 <- O.t[5,6]/2100
+fp.CON3 <- O.t[6,6]/2100
+O.CON3 <- sp.CON3/fp.CON3;O.CON3
+
+sp.CON4 <- O.t[7,6]/3902
+fp.CON4 <- O.t[8,6]/3902
+O.CON4 <- sp.CON4/fp.CON4;O.CON4
+
+sp.CON5 <- O.t[9,6]/4858
+fp.CON5 <- O.t[10,6]/4858
+O.CON5 <- sp.CON5/fp.CON5;O.CON5
+
+sp.CON6 <- O.t[11,6]/3318
+fp.CON6 <- O.t[12,6]/3318
+O.CON6 <- sp.CON6/fp.CON6;O.CON6
+
+sp.CON7 <- O.t[13,6]/1863
+fp.CON7 <- O.t[14,6]/1863
+O.CON7 <- sp.CON7/fp.CON7;O.CON7
+
+sp.CON8 <- O.t[15,6]/797
+fp.CON8 <- O.t[16,6]/797
+O.CON8 <- sp.CON8/fp.CON8;O.CON8
+
+sp.CON9 <- O.t[17,6]/387
+fp.CON9 <- O.t[18,6]/387
+O.CON9 <- sp.CON9/fp.CON9;O.CON9
+
+CON <- rbind(O.CON1,O.CON2,O.CON3,O.CON4,O.CON5,O.CON6,O.CON7,O.CON8,O.CON9);CON
+
+
+------------------------------------------
+
+# Table of Odds #
+
+O <- data.frame(cbind(NS,CP,COT,CON),row.names=c("1","2","3","4","5","6","7","8","9"))
+colnames(O) <- c("NS","CP","COT","CON")
+O
+
+------------------------------------------
+
+# Table of Odds Ratios #
+
+a <- O$CP/O$NS;a
+b <- O$COT/O$NS;b
+c <- O$CON/O$NS;c
+
+OR <- data.frame(cbind(a,b,c));OR
+colnames(OR) <- c("CP/NS","COT/NS","CON/NS")
+OR <- round(OR,3);OR
+
+------------------------------------------
+
+# CP/NS SE #
+
+O.t
+
+OR
+
+CP.NS1.SE <-  function(n.11=18,n.22=143,n.12=638,n.21=2)
+{
+	A=1/(n.11+n.22+n.12+n.21)
+	sqrt(A)
+}
+CP.NS1.SE()
+
+CP.NS2.SE <-  function(n.11=22,n.22=337,n.12=100,n.21=4)
+{
+	A=1/(n.11+n.22+n.12+n.21)
+	sqrt(A)
+}
+CP.NS2.SE()
+
+CP.NS3.SE <-  function(n.11=19,n.22=230,n.12=3,n.21=95)
+{
+	A=1/(n.11+n.22+n.12+n.21)
+	sqrt(A)
+}
+CP.NS3.SE()
+
+CP.NS4.SE <-  function(n.11=55,n.22=577,n.12=38,n.21=334)
+{
+	A=1/(n.11+n.22+n.12+n.21)
+	sqrt(A)
+}
+CP.NS4.SE()
+
+CP.NS5.SE <-  function(n.11=117,n.22=950,n.12=113,n.21=733)
+{
+	A=1/(n.11+n.22+n.12+n.21)
+	sqrt(A)
+}
+CP.NS5.SE()
+
+CP.NS6.SE <-  function(n.11=170,n.22=727,n.12=173,n.21=776)
+{
+	A=1/(n.11+n.22+n.12+n.21)
+	sqrt(A)
+}
+CP.NS6.SE()
+
+CP.NS7.SE <-  function(n.11=179,n.22=489,n.12=212,n.21=612)
+{
+	A=1/(n.11+n.22+n.12+n.21)
+	sqrt(A)
+}
+CP.NS7.SE()
+
+CP.NS8.SE <-  function(n.11=120,n.22=241,n.12=243,n.21=424)
+{
+	A=1/(n.11+n.22+n.12+n.21)
+	sqrt(A)
+}
+CP.NS8.SE()
+
+CP.NS9.SE <-  function(n.11=120,n.22=154,n.12=253,n.21=284)
+{
+	A=1/(n.11+n.22+n.12+n.21)
+	sqrt(A)
+}
+CP.NS9.SE()
+
+a <- rbind(CP.NS1.SE(),CP.NS2.SE(),CP.NS3.SE(),CP.NS4.SE(),CP.NS5.SE(),CP.NS6.SE(),CP.NS7.SE(),CP.NS8.SE(),CP.NS9.SE())
+
+------------------------------------------
+
+# COT/NS SE #
+
+O.t
+
+COT.NS1.SE <-  function(n.11=18,n.22=638,n.12=149,n.21=4382)
+{
+	A=1/(n.11+n.22+n.12+n.21)
+	sqrt(A)
+}
+COT.NS1.SE()
+
+COT.NS2.SE <-  function(n.11=22,n.22=337,n.12=169,n.21=2861)
+{
+	A=1/(n.11+n.22+n.12+n.21)
+	sqrt(A)
+}
+COT.NS2.SE()
+
+COT.NS3.SE <-  function(n.11=19,n.22=230,n.12=193,n.21=2074)
+{
+	A=1/(n.11+n.22+n.12+n.21)
+	sqrt(A)
+}
+COT.NS3.SE()
+
+COT.NS4.SE <-  function(n.11=55,n.22=577,n.12=576,n.21=4106)
+{
+	A=1/(n.11+n.22+n.12+n.21)
+	sqrt(A)
+}
+COT.NS4.SE()
+
+COT.NS5.SE <-  function(n.11=117,n.22=950,n.12=1001,n.21=5051)
+{
+	A=1/(n.11+n.22+n.12+n.21)
+	sqrt(A)
+}
+COT.NS5.SE()
+
+COT.NS6.SE <-  function(n.11=170,n.22=727,n.12=901,n.21=2979)
+{
+	A=1/(n.11+n.22+n.12+n.21)
+	sqrt(A)
+}
+COT.NS6.SE()
+
+COT.NS7.SE <-  function(n.11=179,n.22=489,n.12=613,n.21=1420)
+{
+	A=1/(n.11+n.22+n.12+n.21)
+	sqrt(A)
+}
+COT.NS7.SE()
+
+COT.NS8.SE <-  function(n.11=120,n.22=241,n.12=337,n.21=534)
+{
+	A=1/(n.11+n.22+n.12+n.21)
+	sqrt(A)
+}
+COT.NS8.SE()
+
+COT.NS9.SE <-  function(n.11=120,n.22=154,n.12=189,n.21=156)
+{
+	A=1/(n.11+n.22+n.12+n.21)
+	sqrt(A)
+}
+COT.NS9.SE()
+
+b <- rbind(COT.NS1.SE(),COT.NS2.SE(),COT.NS3.SE(),COT.NS4.SE(),COT.NS5.SE(),COT.NS6.SE(),COT.NS7.SE(),COT.NS8.SE(),COT.NS9.SE())
+
+------------------------------------------
+
+# COT/NS SE #
+
+O.t
+
+CON.NS1.SE <-  function(n.11=18,n.22=638,n.12=124,n.21=3286)
+{
+	A=1/(n.11+n.22+n.12+n.21)
+	sqrt(A)
+}
+CON.NS1.SE()
+
+CON.NS2.SE <-  function(n.11=22,n.22=337,n.12=140,n.21=2099)
+{
+	A=1/(n.11+n.22+n.12+n.21)
+	sqrt(A)
+}
+CON.NS2.SE()
+
+CON.NS3.SE <-  function(n.11=19,n.22=230,n.12=187,n.21=1664)
+{
+	A=1/(n.11+n.22+n.12+n.21)
+	sqrt(A)
+}
+CON.NS3.SE()
+
+CON.NS4.SE <-  function(n.11=55,n.22=577,n.12=514,n.21=2756)
+{
+	A=1/(n.11+n.22+n.12+n.21)
+	sqrt(A)
+}
+CON.NS4.SE()
+
+CON.NS5.SE <-  function(n.11=117,n.22=950,n.12=778,n.21=3013)
+{
+	A=1/(n.11+n.22+n.12+n.21)
+	sqrt(A)
+}
+CON.NS5.SE()
+
+CON.NS6.SE <-  function(n.11=170,n.22=727,n.12=689,n.21=1732)
+{
+	A=1/(n.11+n.22+n.12+n.21)
+	sqrt(A)
+}
+CON.NS6.SE()
+
+CON.NS7.SE <-  function(n.11=179,n.22=489,n.12=432,n.21=763)
+{
+	A=1/(n.11+n.22+n.12+n.21)
+	sqrt(A)
+}
+CON.NS7.SE()
+
+CON.NS8.SE <-  function(n.11=120,n.22=241,n.12=214,n.21=222)
+{
+	A=1/(n.11+n.22+n.12+n.21)
+	sqrt(A)
+}
+CON.NS8.SE()
+
+CON.NS9.SE <-  function(n.11=120,n.22=154,n.12=63,n.21=50)
+{
+	A=1/(n.11+n.22+n.12+n.21)
+	sqrt(A)
+}
+CON.NS9.SE()
+
+c <- rbind(CON.NS1.SE(),CON.NS2.SE(),CON.NS3.SE(),CON.NS4.SE(),CON.NS5.SE(),CON.NS6.SE(),CON.NS7.SE(),CON.NS8.SE(),CON.NS9.SE())
+
+---------------------------------------------------------------
+
+# Table of CI #
+
+CI <- data.frame(cbind(a,b,c))
+colnames(CI) <- c("CP/NS.SE","COT/NS.SE","CON/NS.SE")
+CI
+ME <- CI*1.645
+
+UL <- log(OR)+ME;UL
+LL <- log(OR)-ME;LL
+
+a <- exp(UL);a
+colnames(a) <- c("CP/NS.u","COT/NS.u","CON/NS.u")
+b <- exp(LL)
+CI <- cbind(b,a);CI
+CI <- CI[,c("CP/NS","CP/NS.u","COT/NS","COT/NS.u","CON/NS","CON/NS.u")]
+
+CI <- round(CI,3);CI
+
+---------------------------------------------------------------
+
+# Table of CI & OR #
+
+OR
+CI
+
+---------------------------------------------------------------
+
+
+# Success Proportions for NS (with CP)#
+
+O.t
+
+sp.NS1 <- O.t[1,3]/801
+O.NS1 <- sp.NS1;O.NS1
+
+sp.NS2 <- O.t[3,3]/463
+O.NS2 <- sp.NS2;O.NS2
+
+sp.NS3 <- O.t[5,3]/347
+O.NS3 <- sp.NS3;O.NS3
+
+sp.NS4 <- O.t[7,3]/1004
+O.NS4 <- sp.NS4;O.NS4
+
+sp.NS5 <- O.t[9,3]/1913
+O.NS5 <- sp.NS5;O.NS5
+
+sp.NS6 <- O.t[11,3]/1846
+O.NS6 <- sp.NS6;O.NS6
+
+sp.NS7 <- O.t[13,3]/1492
+O.NS7 <- sp.NS7;O.NS7
+
+sp.NS8 <- O.t[15,3]/1028
+O.NS8 <- sp.NS8;O.NS8
+
+sp.NS9 <- O.t[17,3]/811
+O.NS9 <- sp.NS9;O.NS9
+
+NS <- rbind(O.NS1,O.NS2,O.NS3,O.NS4,O.NS5,O.NS6,O.NS7,O.NS8,O.NS9);NS
+
+------------------------------------------
+
+# Success Proportions for CP (with NS)#
+
+O.t
+
+sp.CP1 <- O.t[1,4]/801
+O.CP1 <- sp.CP1;O.CP1
+
+sp.CP2 <- O.t[3,4]/463
+O.CP2 <- sp.CP2;O.CP2
+
+sp.CP3 <- O.t[5,4]/347
+O.CP3 <- sp.CP3;O.CP3
+
+sp.CP4 <- O.t[7,4]/1004
+O.CP4 <- sp.CP4;O.CP4
+
+sp.CP5 <- O.t[9,4]/1913
+O.CP5 <- sp.CP5;O.CP5
+
+sp.CP6 <- O.t[11,4]/1846
+O.CP6 <- sp.CP6;O.CP6
+
+sp.CP7 <- O.t[13,4]/1492
+O.CP7 <- sp.CP7;O.CP7
+
+sp.CP8 <- O.t[15,4]/1028
+O.CP8 <- sp.CP8;O.CP8
+
+sp.CP9 <- O.t[17,4]/811
+O.CP9 <- sp.CP9;O.CP9
+
+CP <- rbind(O.CP1,O.CP2,O.CP3,O.CP4,O.CP5,O.CP6,O.CP7,O.CP8,O.CP9);CP
+
+------------------------------------------
+
+# Success Proportions for COT (with NS) #
+
+
+sp.COT1 <- O.t[1,5]/5185
+O.COT1 <- sp.COT1;O.COT1
+
+sp.COT2 <- O.t[3,5]/3389
+O.COT2 <- sp.COT2;O.COT2
+
+sp.COT3 <- O.t[5,5]/2516
+O.COT3 <- sp.COT3;O.COT3
+
+sp.COT4 <- O.t[7,5]/5314
+O.COT4 <- sp.COT4;O.COT4
+
+sp.COT5 <- O.t[9,5]/7119
+O.COT5 <- sp.COT5;O.COT5
+
+sp.COT6 <- O.t[11,5]/4777
+O.COT6 <- sp.COT6;O.COT6
+
+sp.COT7 <- O.t[13,5]/2701
+O.COT7 <- sp.COT7;O.COT7
+
+sp.COT8 <- O.t[15,5]/1232
+O.COT8 <- sp.COT8;O.COT8
+
+sp.COT9 <- O.t[17,5]/619
+O.COT9 <- sp.COT9;O.COT9
+
+COT <- rbind(O.COT1,O.COT2,O.COT3,O.COT4,O.COT5,O.COT6,O.COT7,O.COT8,O.COT9);COT
+
+------------------------------------------
+
+# Success Proportions for CON #
+
+O.t
+
+sp.CON1 <- O.t[1,6]/4066
+O.CON1 <- sp.CON1;O.CON1
+
+sp.CON2 <- O.t[3,6]/2598
+O.CON2 <- sp.CON2;O.CON2
+
+sp.CON3 <- O.t[5,6]/2100
+O.CON3 <- sp.CON3;O.CON3
+
+sp.CON4 <- O.t[7,6]/3902
+O.CON4 <- sp.CON4;O.CON4
+
+sp.CON5 <- O.t[9,6]/4858
+O.CON5 <- sp.CON5;O.CON5
+
+sp.CON6 <- O.t[11,6]/3318
+O.CON6 <- sp.CON6;O.CON6
+
+sp.CON7 <- O.t[13,6]/1863
+O.CON7 <- sp.CON7;O.CON7
+
+sp.CON8 <- O.t[15,6]/797
+O.CON8 <- sp.CON8;O.CON8
+
+sp.CON9 <- O.t[17,6]/387
+O.CON9 <- sp.CON9;O.CON9
+
+CON <- rbind(O.CON1,O.CON2,O.CON3,O.CON4,O.CON5,O.CON6,O.CON7,O.CON8,O.CON9);CON
+
+------------------------------------------
+
+# Table of Success Proportions #
+
+SP <- data.frame(cbind(NS,CP,COT,CON),row.names=c("1","2","3","4","5","6","7","8","9"))
+colnames(SP) <- c("NS","CP","COT","CON")
+SP
+
+------------------------------------------
+
+# Table of RR #
+
+d <- SP$CP/SP$NS;d
+e <- SP$COT/SP$NS;e
+f <- SP$CON/SP$NS;f
+
+RR <- data.frame(cbind(d,e,f));RR
+colnames(RR) <- c("CP/NS","COT/NS","CON/NS")
+RR <- round(RR,3);RR
+
+-------------------------------------------
+
+# CP/NS SE (RR) #
+
+O.t
+
+OR
+
+CP.NS1.SE.RR <-  function(n.1=656,n.2=145,p.1=sp.NS1,p.2=sp.CP1)
+{
+	A=1/(((1-p.1)/(n.1*p.1))+((1-p.2)/(n.2*p.2)))
+	sqrt(A)
+}
+CP.NS1.SE.RR()
+
+CP.NS2.SE.RR <-  function(n.1=359,n.2=104,p.1=sp.NS2,p.2=sp.CP2)
+{
+	A=(((1-p.1)/(n.1*p.1))+((1-p.2)/(n.2*p.2)))
+	sqrt(A)
+}
+CP.NS2.SE.RR()
+
+CP.NS3.SE.RR <-  function(n.1=249,n.2=98,p.1=sp.NS3,p.2=sp.CP3)
+{
+	A=(((1-p.1)/(n.1*p.1))+((1-p.2)/(n.2*p.2)))
+	sqrt(A)
+}
+CP.NS3.SE.RR()
+
+CP.NS4.SE.RR <-  function(n.1=632,n.2=372,p.1=sp.NS4,p.2=sp.CP4)
+{
+	A=(((1-p.1)/(n.1*p.1))+((1-p.2)/(n.2*p.2)))
+	sqrt(A)
+}
+CP.NS4.SE.RR()
+
+CP.NS5.SE.RR <-  function(n.1=1067,n.2=846,p.1=sp.NS5,p.2=sp.CP5)
+{
+	A=(((1-p.1)/(n.1*p.1))+((1-p.2)/(n.2*p.2)))
+	sqrt(A)
+}
+
+CP.NS6.SE.RR <-  function(n.1=897,n.2=949,p.1=sp.NS6,p.2=sp.CP6)
+{
+	A=(((1-p.1)/(n.1*p.1))+((1-p.2)/(n.2*p.2)))
+	sqrt(A)
+}
+CP.NS6.SE.RR()
+
+CP.NS7.SE.RR <-  function(n.1=668,n.2=824,p.1=sp.NS7,p.2=sp.CP7)
+{
+	A=(((1-p.1)/(n.1*p.1))+((1-p.2)/(n.2*p.2)))
+	sqrt(A)
+}
+CP.NS7.SE.RR()
+
+CP.NS8.SE.RR <-  function(n.1=361,n.2=667,p.1=sp.NS8,p.2=sp.CP8)
+{
+	A=(((1-p.1)/(n.1*p.1))+((1-p.2)/(n.2*p.2)))
+	sqrt(A)
+}
+CP.NS8.SE()
+
+CP.NS9.SE.RR <-  function(n.1=174,n.2=537,p.1=sp.NS9,p.2=sp.CP9)
+{
+	A=(((1-p.1)/(n.1*p.1))+((1-p.2)/(n.2*p.2)))
+	sqrt(A)
+}
+CP.NS9.SE.RR()
+
+a <- rbind(CP.NS1.SE.RR(),CP.NS2.SE.RR(),CP.NS3.SE.RR(),CP.NS4.SE.RR(),CP.NS5.SE.RR(),CP.NS6.SE.RR(),CP.NS7.SE.RR(),CP.NS8.SE.RR(),CP.NS9.SE.RR())
+a
+
+------------------------------------------
+
+# COT/NS SE (RR) #
+
+O.t
+
+COT.NS1.SE.RR <-  function(n.1=656,n.2=4531,p.1=sp.NS1,p.2=sp.COT1)
+{
+	A=(((1-p.1)/(n.1*p.1))+((1-p.2)/(n.2*p.2)))
+	sqrt(A)
+}
+COT.NS1.SE.RR()
+
+COT.NS2.SE.RR <-  function(n.1=359,n.2=3030,p.1=sp.NS2,p.2=sp.COT2)
+{
+	A=(((1-p.1)/(n.1*p.1))+((1-p.2)/(n.2*p.2)))
+	sqrt(A)
+}
+COT.NS2.SE.RR()
+
+COT.NS3.SE.RR <-  function(n.1=249,n.2=2267,p.1=sp.NS3,p.2=sp.COT3)
+{
+	A=(((1-p.1)/(n.1*p.1))+((1-p.2)/(n.2*p.2)))
+	sqrt(A)
+}
+COT.NS3.SE.RR()
+
+COT.NS4.SE.RR <-  function(n.1=632,n.2=4682,p.1=sp.NS4,p.2=sp.COT4)
+{
+	A=(((1-p.1)/(n.1*p.1))+((1-p.2)/(n.2*p.2)))
+	sqrt(A)
+}
+COT.NS4.SE.RR()
+
+COT.NS5.SE.RR <-  function(n.1=1067,n.2=6052,p.1=sp.NS5,p.2=sp.COT5)
+{
+	A=(((1-p.1)/(n.1*p.1))+((1-p.2)/(n.2*p.2)))
+	sqrt(A)
+}
+COT.NS5.SE.RR()
+
+COT.NS6.SE.RR <-  function(n.1=897,n.2=3880,p.1=sp.NS6,p.2=sp.COT6)
+{
+	A=(((1-p.1)/(n.1*p.1))+((1-p.2)/(n.2*p.2)))
+	sqrt(A)
+}
+COT.NS6.SE.RR()
+
+COT.NS7.SE.RR <-  function(n.1=668,n.2=2033,p.1=sp.NS7,p.2=sp.COT7)
+{
+	A=(((1-p.1)/(n.1*p.1))+((1-p.2)/(n.2*p.2)))
+	sqrt(A)
+}
+COT.NS7.SE.RR()
+
+COT.NS8.SE.RR <-  function(n.1=361,n.2=871,p.1=sp.NS8,p.2=sp.COT8)
+{
+	A=(((1-p.1)/(n.1*p.1))+((1-p.2)/(n.2*p.2)))
+	sqrt(A)
+}
+COT.NS8.SE.RR()
+
+COT.NS9.SE.RR <-  function(n.1=174,n.2=345,p.1=sp.NS9,p.2=sp.COT9)
+{
+	A=(((1-p.1)/(n.1*p.1))+((1-p.2)/(n.2*p.2)))
+	sqrt(A)
+}
+COT.NS9.SE.RR()
+
+b <- rbind(COT.NS1.SE.RR(),COT.NS2.SE.RR(),COT.NS3.SE.RR(),COT.NS4.SE.RR(),COT.NS5.SE.RR(),COT.NS6.SE.RR(),COT.NS7.SE.RR(),COT.NS8.SE.RR(),COT.NS9.SE.RR())
+b
+------------------------------------------
+
+# COT/NS SE (RR) #
+
+O.t
+
+CON.NS1.SE.RR <-  function(n.1=656,n.2=3410,p.1=sp.NS9,p.2=sp.CON1)
+{
+	A=(((1-p.1)/(n.1*p.1))+((1-p.2)/(n.2*p.2)))
+	sqrt(A)
+}
+CON.NS1.SE.RR()
+
+CON.NS2.SE.RR <-  function(n.1=359,n.2=2239,p.1=sp.NS9,p.2=sp.CON2)
+{
+	A=(((1-p.1)/(n.1*p.1))+((1-p.2)/(n.2*p.2)))
+	sqrt(A)
+}
+CON.NS2.SE.RR()
+
+CON.NS3.SE.RR <-  function(n.1=249,n.2=1851,p.1=sp.NS9,p.2=sp.CON3)
+{
+	A=(((1-p.1)/(n.1*p.1))+((1-p.2)/(n.2*p.2)))
+	sqrt(A)
+}
+CON.NS3.SE.RR()
+
+CON.NS4.SE.RR <-  function(n.1=632,n.2=3270,p.1=sp.NS9,p.2=sp.CON4)
+{
+	A=(((1-p.1)/(n.1*p.1))+((1-p.2)/(n.2*p.2)))
+	sqrt(A)
+}
+CON.NS4.SE.RR()
+
+CON.NS5.SE.RR <-  function(n.1=1067,n.2=3791,p.1=sp.NS9,p.2=sp.CON5)
+{
+	A=(((1-p.1)/(n.1*p.1))+((1-p.2)/(n.2*p.2)))
+	sqrt(A)
+}
+CON.NS5.SE.RR()
+
+CON.NS6.SE.RR <-  function(n.1=897,n.2=2421,p.1=sp.NS9,p.2=sp.CON6)
+{
+	A=(((1-p.1)/(n.1*p.1))+((1-p.2)/(n.2*p.2)))
+	sqrt(A)
+}
+CON.NS6.SE.RR()
+
+CON.NS7.SE.RR <-  function(n.1=668,n.2=1195,p.1=sp.NS9,p.2=sp.CON7)
+{
+	A=(((1-p.1)/(n.1*p.1))+((1-p.2)/(n.2*p.2)))
+	sqrt(A)
+}
+CON.NS7.SE.RR()
+
+CON.NS8.SE.RR <-  function(n.1=361,n.2=436,p.1=sp.NS9,p.2=sp.CON8)
+{
+	A=(((1-p.1)/(n.1*p.1))+((1-p.2)/(n.2*p.2)))
+	sqrt(A)
+}
+CON.NS8.SE.RR()
+
+CON.NS9.SE.RR <-  function(n.1=174,n.2=113,p.1=sp.NS9,p.2=sp.CON9)
+{
+	A=(((1-p.1)/(n.1*p.1))+((1-p.2)/(n.2*p.2)))
+	sqrt(A)
+}
+CON.NS9.SE.RR()
+
+c <- rbind(CON.NS1.SE.RR(),CON.NS2.SE.RR(),CON.NS3.SE.RR(),CON.NS4.SE.RR(),CON.NS5.SE.RR(),CON.NS6.SE.RR(),CON.NS7.SE.RR(),CON.NS8.SE.RR(),CON.NS9.SE.RR())
+c
+
+----------------------------------------------------
+
+# Table of CI #
+
+CI.RR <- data.frame(cbind(a,b,c))
+colnames(CI.RR) <- c("CP/NS.SE.RR","COT/NS.SE.RR","CON/NS.SE.RR")
+CI.RR
+ME.RR <- (CI.RR*1.645)
+
+UL.RR <- log(RR)+ME.RR;UL.RR
+LL.RR <- log(RR)-ME.RR;LL.RR
+
+a <- exp(UL.RR);a
+colnames(a) <- c("CP/NS.RR.u","COT/NS.RR.u","CON/NS.RR.u")
+b <- exp(LL.RR)
+colnames(b) <- c("CP/NS.RR","COT/NS.RR","CON/NS.RR")
+CI.RR <- cbind(b,a);CI.RR
+CI.RR <- CI.RR[,c("CP/NS.RR","CP/NS.RR.u","COT/NS.RR","COT/NS.RR.u","CON/NS.RR","CON/NS.RR.u")];CI.RR
+CI.RR <- round(CI.RR,3);CI.RR
+
+colnames(RR) <- c("CP/NS.RR","COT/NS.RR","CON/NS.RR");RR
+----------------------------------------------------
+
+# Table of CI.RR & RR #
+
+RR
+CI.RR
+
+----------------------------------------------------------------
+
+# Graphics #
+
+sad.table.OR <- read.xlsx("sad.data.xlsx",sheetName="Sheet6");sad.table.OR
+
+par(mfrow=c(1,1))
+plot(sad.table.OR$Age.,sad.table.OR$OR,xlab="Age",ylab="Odds Ratio",main="Odds Ratio vs. Age\n(Across All Levels of Smoking Type)",type="l",col=c("light blue","light green")) 
+plot(sad.table.OR$Smoking.Type,sad.table.OR$OR,xlab="Smoking Type",ylab="Odds Ratio",main="Odds Ratio vs. Age\n(Across All Levels of Age)",col=c("light blue","light green")) 
+
+sad.table.OR <- read.xlsx("sad.data.xlsx",sheetName="Sheet6")
+sad.table.OR <- dcast(sad.table.OR,...~Smoking.Type);sad.table.OR
+sad.table.OR <- sad.table.OR[,c("Age.","CP/NS","COT/NS","CON/NS")];sad.table.OR
+colnames(sad.table.OR) <- c("Age.","CP.NS","COT.NS","CON.NS")
+
+par(mfrow=c(2,2))
+plot(sad.table.OR$Age.,sad.table.OR$CP.NS,xlab="Age",ylab="Odds Ratio",main="Odds Ratio Comparison\nbetween CP-type & NS-type Smokers by Age Group",cex.main=0.8,cex.lab=0.8,cex.axis=0.8,ylim=c(0.4,2.5))
+abline(h=1.0,col="Blue",lty=2)
+plot(sad.table.OR$Age.,sad.table.OR$COT.NS,xlab="Age",ylab="Odds Ratio",main="Odds Ratio Comparison\nbetween COT -type & NS-type Smokers by Age Group",cex.main=0.8,cex.lab=0.8,cex.axis=0.8,ylim=c(0.4,2.5))
+abline(h=1.0,col="Blue",lty=2)
+plot(sad.table.OR$Age.,sad.table.OR$CON.NS,xlab="Age",ylab="Odds Ratio",main="Odds Ratio Comparison\nbetween CON-type & NS-type Smokers by Age Group",cex.main=0.8,cex.lab=0.8,cex.axis=0.8,ylim=c(0.4,2.5))
+abline(h=1.0,col="Blue",lty=2)
+
+sad.table.RR <- read.xlsx("sad.data.xlsx",sheetName="Sheet9");sad.table.RR
+
+par(mfrow=c(1,1))
+plot(sad.table.RR$Age.,sad.table.RR$RR,xlab="Age",ylab="Relative Risks",main="Relative Risks vs. Age\n(Across All Levels of Smoking Type)",type="l",col=c("light blue","light green")) 
+plot(sad.table.RR$Smoking.Type,sad.table.RR$RR,xlab="Smoking Type",ylab="Relative Risks",main="Relative Risks vs. Age\n(Across All Levels of Age)",col=c("light blue","light green")) 
+
+sad.table.RR <- read.xlsx("sad.data.xlsx",sheetName="Sheet9")
+sad.table.RR <- dcast(sad.table.RR,...~Smoking.Type);sad.table.RR
+sad.table.RR <- sad.table.RR[,c("Age.","CP/NS","COT/NS","CON/NS")];sad.table.RR
+colnames(sad.table.RR) <- c("Age.","CP.NS","COT.NS","CON.NS")
+
+par(mfrow=c(2,2))
+plot(sad.table.RR$Age.,sad.table.RR$CP.NS,xlab="Age",ylab="Relative Risks",main="Relative Risks Comparison\nbetween CP-type & NS-type Smokers by Age Group",cex.main=0.8,cex.lab=0.8,cex.axis=0.8,ylim=c(0.1,2.7))
+abline(h=1.0,col="Blue",lty=2)
+plot(sad.table.RR$Age.,sad.table.RR$COT.NS,xlab="Age",ylab="Relative Risks",main="Relative Risks Comparison\nbetween COT -type & NS-type Smokers by Age Group",cex.main=0.8,cex.lab=0.8,cex.axis=0.8,ylim=c(0.1,2.7))
+abline(h=1.0,col="Blue",lty=2)
+plot(sad.table.RR$Age.,sad.table.RR$CON.NS,xlab="Age",ylab="Relative Risks",main="Relative Risks Comparison\nbetween CON-type & NS-type Smokers by Age Group",cex.main=0.8,cex.lab=0.8,cex.axis=0.8,ylim=c(0.1,2.7))
+abline(h=1.0,col="Blue",lty=2)
